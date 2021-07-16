@@ -1,0 +1,21 @@
+body {
+    background-color: #f3f3f3;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    font-family: "Microsoft YaHei UI";
+}
+
+#content {
+    width: 100%;
+}
+
+nav {
+    height: 80px;
+    width: 100%;
+    background-color: #fff;
+    margin-bottom: 10px;
+}
