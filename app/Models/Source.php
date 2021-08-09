@@ -26,4 +26,14 @@ class Source extends Base
             return static::all();
         });
     }
+
+    public static function selectOptions($where = []): array
+    {
+        $options = [];
+        $sources = self::query()->where($where)->get();
+        foreach ($sources as $source) {
+            $options[$source->id] = $source->name;
+        }
+        return $options;
+    }
 }

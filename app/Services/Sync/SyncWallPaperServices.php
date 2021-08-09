@@ -89,28 +89,26 @@ class SyncWallPaperServices implements SyncInterface
     public function syncWallHaven($category)
     {
         // TODO: Implement syncWallHaven() method.
-        $category_id = $category->id;
-        $source_id = $category->source_id;
+        $category_id = $category['id'];
+        $source_id = $category['source_id'];
         $page = $this->redis->get(self::WALLPAPER_CATEGORY_PAGE_KEY . $category_id);
         $page = max(($page ?? 0), 0) + 1;
-        $url = $category->url . "?page=$page";
-        $seconds = 5;
+        $url = $category['url'] . "?page=$page";
         QueryList::getInstance()->get($url, null, [
             'headers' => self::HEADERS
-        ])->find('.thumb-listing-page>ul>li')->map(function ($query) use ($source_id, $category_id, $seconds) {
-            $seconds += 5;
+        ])->find('.thumb-listing-page>ul>li')->map(function ($query) use ($source_id, $category_id) {
             $cover = $query->find('figure>img')->attr('data-src');
             $original_url = $query->find('figure>a')->attr('href');
-            $favor = $query->find('figure>.thumb-info>.wall-favs')->text();
+            $favor = trim($query->find('figure>.thumb-info>.wall-favs')->text());
             $data = [
                 'cover' => $cover,
                 'original_url' => $original_url,
-                'favor' => $favor,
+                'favor' => is_numeric($favor) ? $favor : 0,
                 'source_id' => $source_id,
                 'category_id' => $category_id
             ];
-            //将任务分发到队列里，延时5秒执行，防止频繁请求报错
-            SyncWallHavenWallPaper::dispatch(new SyncWallHavenWallPaper($data))->delay(now()->addSeconds($seconds));
+            //将任务分发到队列里，延时3秒执行，防止频繁请求报错
+            SyncWallHavenWallPaper::dispatch(new SyncWallHavenWallPaper($data));
         });
         $this->redis->set(self::WALLPAPER_CATEGORY_PAGE_KEY . $category_id, $page);
     }
@@ -123,9 +121,9 @@ class SyncWallPaperServices implements SyncInterface
     public function syncUnsplash($category)
     {
         // TODO: Implement syncUnsplash() method.
-        $explode_url = explode('/', $category->url);
-        $category_id = $category->id;
-        $source_id = $category->source_id;
+        $explode_url = explode('/', $category['url']);
+        $category_id = $category['id'];
+        $source_id = $category['source_id'];
         $key = end($explode_url);
         $action = $key ? ('napi/topics/' . $key . '/photos') : 'napi/photos';
         $page = $this->redis->get(self::WALLPAPER_CATEGORY_PAGE_KEY . $category_id);
@@ -133,13 +131,11 @@ class SyncWallPaperServices implements SyncInterface
         $url = self::UNSPLASH_API . $action . '?per_page=' . self::UNSPLASH_PER_PAGE . '&page=' . $page;
         $curl_list = $this->curl->get($url, [])->getBody()->getContents();
         $data_list = json_decode($curl_list, true);
-        $seconds = 5;
         foreach ($data_list as $data) {
-            $seconds += 5;
             $data['source_id'] = $source_id;
             $data['category_id'] = $category_id;
-            //将任务分发到队列里，延时5秒执行，防止频繁请求报错
-            SyncUnsplashWallPaper::dispatch(new SyncUnsplashWallPaper($data))->delay(now()->addSeconds($seconds));
+            //将任务分发到队列里，延时3秒执行，防止频繁请求报错
+            SyncUnsplashWallPaper::dispatch(new SyncUnsplashWallPaper($data));
         }
         $this->redis->set(self::WALLPAPER_CATEGORY_PAGE_KEY . $category_id, $page);
     }

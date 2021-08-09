@@ -3,12 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\WallPaperCategory;
 use Encore\Admin\Controllers\Dashboard;
 use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
-use QL\QueryList;
 
 class HomeController extends Controller
 {

@@ -13,3 +13,14 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+/app/Admin/Controllers/ExcelController.php
+/app/Admin/Actions/Excel/
+/app/Admin/Actions/Consume/
+/app/Jobs/BatchUpdateExcelPlace.php
+/app/Jobs/UpdateExcelIdcard.php
+/app/Jobs/UpdateExcelPlace.php
+/app/Models/Excel.php
+/app/Tools/
+/app/Imports/
+/resources/views/web/index.blade.php.bak
+/storage/framework/laravel-excel/

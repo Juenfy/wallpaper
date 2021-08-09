@@ -57,7 +57,7 @@ class SyncWallHavenWallPaper implements ShouldQueue
             'name' => $uploader->find('.username')->text()
         ];
         $size = $ql->find('.sidebar-section>dl>dd')->eq(3)->text();
-        $view = str_replace(',', '', $ql->find('.sidebar-section>dl>dd')->eq(4)->text());
+        $view = trim(str_replace(',', '', $ql->find('.sidebar-section>dl>dd')->eq(4)->text()));
         $wallpaper = [
             'source_id' => $source_id,
             'category_id' => $category_id,
@@ -69,7 +69,7 @@ class SyncWallHavenWallPaper implements ShouldQueue
                 'original' => $preview
             ]),
             'author_info' => json_encode($author_info),
-            'view' => $view ?? 0,
+            'view' => is_numeric($view) ? $view : 0,
             'favor' => $favor ?? 0,
             'original_url' => $original_url,
             'down' => 0
@@ -80,5 +80,6 @@ class SyncWallHavenWallPaper implements ShouldQueue
             'category_id' => $category_id,
             'cover' => $cover
         ], $wallpaper);
+        sleep(3);//睡眠3秒防止频繁请求被拦截
     }
 }

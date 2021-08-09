@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Tools\RefreshCategory;
+use App\Models\Source;
 use App\Models\WallPaperCategory;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -27,11 +28,11 @@ class WallPaperCategoryController extends AdminController
     {
         $grid = new Grid(new WallPaperCategory());
 
-        $grid->tools(function (Grid\Tools $tools){
+        $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new RefreshCategory());
         });
-        $grid->quickCreate(function (Grid\Tools\QuickCreate $create){
-            $create->select('source_id')->options([]);
+        $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
+            $create->select('source_id')->options(Source::selectOptions());
             $create->text('name');
             $create->text('url');
 

@@ -14,4 +14,5 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->resource('sources', SourceController::class);
     $router->resource('wall-paper-categories', WallPaperCategoryController::class);
+    $router->resource('excels', ExcelController::class);
 });

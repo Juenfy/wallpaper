@@ -40,7 +40,6 @@ class IndexController extends Controller
             'code' => 0,
             'data' => [
                 'wallpapers' => $wallpapers,
-                'selected_sid' => $selected_sid,
                 'total_page' => ceil($count / $per_page)
             ]
         ]);

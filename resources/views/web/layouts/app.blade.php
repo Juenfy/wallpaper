@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>@yield('title')</title>
     <link rel="stylesheet" href="/static/common/css/app.css?ts={!! time() !!}">
+    <script src="http://www.jq22.com/jquery/1.7.2/jquery.min.js"></script>
     @yield('style')
 </head>
 <body>

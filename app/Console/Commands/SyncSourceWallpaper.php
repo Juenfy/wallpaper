@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SyncWallpaper;
 use App\Models\WallPaperCategory;
 use App\Services\Sync\SyncWallPaperServices;
 use Illuminate\Console\Command;
@@ -40,11 +41,16 @@ class SyncSourceWallpaper extends Command
     public function handle()
     {
         set_time_limit(0);
-        $services = new SyncWallPaperServices();
+        //$services = new SyncWallPaperServices();
         $categories = WallPaperCategory::query()->with('source')->get();
         foreach ($categories as $category) {
-            $sync_func = $category->source->sync_func;
-            $services->$sync_func($category);
+            //$sync_func = $category->source->sync_func;
+            //$services->$sync_func($category->toArray());
+            $data = [
+                'sync_func' => $category->source->sync_func,
+                'category' => $category->toArray()
+            ];
+            SyncWallpaper::dispatch(new SyncWallpaper($data));
         }
         unset($category);
         $this->info('执行成功');

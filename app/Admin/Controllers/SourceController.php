@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use App\Admin\Actions\Consume\ImportPlanConsume;
 
 class SourceController extends AdminController
 {
@@ -34,6 +35,10 @@ class SourceController extends AdminController
         $grid->column('url', __('Url'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new ImportPlanConsume());
+        });
 
         return $grid;
     }

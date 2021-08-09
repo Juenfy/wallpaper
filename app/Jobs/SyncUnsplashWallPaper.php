@@ -57,8 +57,8 @@ class SyncUnsplashWallPaper implements ShouldQueue
         $ql = QueryList::getInstance()->get($original_url, null, [
             'headers' => self::HEADERS
         ]);
-        $view = str_replace(',', '', $ql->find('._2dX3B>div')->eq(0)->children('span')->text());
-        $down = str_replace(',', '', $ql->find('._2dX3B>div')->eq(1)->children('span')->text());
+        $view = trim(str_replace(',', '', $ql->find('._2dX3B>div')->eq(0)->children('span')->text()));
+        $down = trim(str_replace(',', '', $ql->find('._2dX3B>div')->eq(1)->children('span')->text()));
         $preview = array_shift($data['urls']);//取第一张
         array_pop($data['urls']);
         $headers = get_headers($data['links']['download']);
@@ -77,10 +77,10 @@ class SyncUnsplashWallPaper implements ShouldQueue
             'size' => $size,
             'downloads' => json_encode($data['urls']),
             'author_info' => json_encode($author_info),
-            'view' => empty(trim($view)) ? 0 : $view,
+            'view' => is_numeric($view) ? $view : 0,
             'favor' => $favor ?? 0,
             'original_url' => $original_url,
-            'down' => empty(trim($down)) ? 0 : $down
+            'down' => is_numeric($down) ? $down : 0
         ];
         var_dump($wallpaper);
         WallPaper::query()->updateOrCreate([
@@ -88,5 +88,6 @@ class SyncUnsplashWallPaper implements ShouldQueue
             'category_id' => $category_id,
             'cover' => $cover
         ], $wallpaper);
+        sleep(3);//睡眠3秒防止频繁请求被拦截
     }
 }
