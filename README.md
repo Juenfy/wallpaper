@@ -1,62 +1,43 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+### <center>壁纸爬虫网站</center>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+项目已经适配的壁纸网站
+- [wallhaven](https://wallhaven.cc "wallhaven")
+- [unsplash](https://unsplash.com "unsplash")
 
-## About Laravel
+项目地址：https://github.com/Juenfy/wallpaper
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```shell
+git clone https://github.com/Juenfy/wallpaper.git
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+cd wallpaper
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+composer install
+```
+项目里有两个数据库文件，自己导入，.env里做好配置
+这是爬的壁纸数据，是按源壁纸网站各分类分页爬虫的，数据不会重复
+![laravel+queryList爬虫各大壁纸网站，打造自己的壁纸网站](https://cdn.learnku.com/uploads/images/202109/22/82399/ktJ5bv6TZF.png!large)
 
-## Learning Laravel
+项目技术栈：
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. laravel队列，爬虫任务都是丢到队列里跑的，延时执行，避免频繁请求，爬出来的壁纸数据会持久化到数据库中。
+   执行下面命令监听消费队列：
+```shell
+php artisan queue:listen --queue=default --timeout=0
+```
+![](https://cdn.learnku.com/uploads/images/202109/22/82399/jbg53NgpB4.jpg!large)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. 定时任务配合totem管理面板去管理定时任务。
+   访问totem：自己项目域名/totem，比如我的就是http://wallpaper.com/totem
+   ![laravel+queryList爬虫各大壁纸网站，打造自己的壁纸网站](https://cdn.learnku.com/uploads/images/202109/22/82399/sRklikLlyt.png!large)
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+3. QueryList，一款基于phpspider二次开发的爬虫框架。
 
-### Premium Partners
+4. 后台直接用laravel-admin的，省事。
+   访问后台：自己项目域名/admin，比如我的就是http://wallpaper.com/admin
+   账号：admin 密码：admin
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. 随便写了一个壁纸的展示列表。
+   访问：直接域名即可，比如我的就是http://wallpaper.com
+   瀑布流加载，但加载下一页动画效果有bug，会重叠
+   ![laravel+queryList爬虫各大壁纸网站，打造自己的壁纸网站](https://cdn.learnku.com/uploads/images/202109/22/82399/H3FVLv9BaK.png!large)
